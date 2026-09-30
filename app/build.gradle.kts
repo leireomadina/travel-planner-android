@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -5,6 +7,22 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
+
+// Supabase URL and publishable key, from the git-ignored local.properties
+// (≈ the web app's .env). CI can pass them as environment variables instead.
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        file.inputStream().use(::load)
+    }
+}
+
+fun supabaseConfig(name: String): String =
+    localProperties.getProperty(name)
+        ?: System.getenv(name)
+        ?: throw GradleException(
+            "Add $name to local.properties, with the same value as the web app's NUXT_PUBLIC_$name.",
+        )
 
 android {
     namespace = "com.leireomadina.travelplanner"
@@ -20,6 +38,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "SUPABASE_URL", "\"${supabaseConfig("SUPABASE_URL")}\"")
+        buildConfigField("String", "SUPABASE_KEY", "\"${supabaseConfig("SUPABASE_KEY")}\"")
     }
 
     buildTypes {
@@ -34,6 +55,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }
