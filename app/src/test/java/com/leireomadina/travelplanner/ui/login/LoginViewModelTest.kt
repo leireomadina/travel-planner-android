@@ -8,6 +8,7 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -49,7 +50,7 @@ class LoginViewModelTest {
         viewModel.onLoginClick()
         advanceUntilIdle()
 
-        assertFalse(viewModel.uiState.value.hasError)
+        assertNull(viewModel.uiState.value.error)
         assertEquals(AuthState.LoggedIn, authRepository.authState.value)
     }
 
@@ -60,9 +61,21 @@ class LoginViewModelTest {
         viewModel.onLoginClick()
         advanceUntilIdle()
 
-        assertTrue(viewModel.uiState.value.hasError)
+        assertEquals(LoginError.WrongCredentials, viewModel.uiState.value.error)
         assertFalse(viewModel.uiState.value.isLoading)
         assertEquals(AuthState.LoggedOut, authRepository.authState.value)
+    }
+
+    @Test
+    fun `being offline shows a connection error, not a wrong-password one`() = runTest {
+        authRepository.isOffline = true
+        fillIn(password = "password")
+
+        viewModel.onLoginClick()
+        advanceUntilIdle()
+
+        assertEquals(LoginError.Network, viewModel.uiState.value.error)
+        assertFalse(viewModel.uiState.value.isLoading)
     }
 
     @Test
@@ -74,7 +87,7 @@ class LoginViewModelTest {
         viewModel.onPasswordChange("password")
         viewModel.onLoginClick()
 
-        assertFalse(viewModel.uiState.value.hasError)
+        assertNull(viewModel.uiState.value.error)
     }
 
     @Test
@@ -85,7 +98,7 @@ class LoginViewModelTest {
 
         viewModel.onPasswordChange("password")
 
-        assertFalse(viewModel.uiState.value.hasError)
+        assertNull(viewModel.uiState.value.error)
     }
 
     @Test

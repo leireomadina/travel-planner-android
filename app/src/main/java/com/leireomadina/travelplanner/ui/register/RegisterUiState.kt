@@ -12,5 +12,13 @@ data class RegisterUiState(
     // After a sign-up works, submitting again would only send another confirmation
     // email, so it stays off until a field is edited.
     val canSubmit: Boolean
-        get() = email.isNotBlank() && password.isNotBlank() && !isLoading && !isSuccess
+        get() = email.isNotBlank() && isPasswordLongEnough && !isLoading && !isSuccess
+
+    val isPasswordLongEnough: Boolean
+        get() = password.length >= MIN_PASSWORD_LENGTH
+
+    companion object {
+        // Supabase's default minimum. Shorter passwords would only get the generic error.
+        const val MIN_PASSWORD_LENGTH = 6
+    }
 }

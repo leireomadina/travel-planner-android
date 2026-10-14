@@ -101,6 +101,15 @@ class RegisterViewModelTest {
     }
 
     @Test
+    fun `a password shorter than the minimum can't be submitted`() = runTest {
+        fillIn(password = "a".repeat(RegisterUiState.MIN_PASSWORD_LENGTH - 1))
+        assertFalse(viewModel.uiState.value.canSubmit)
+
+        viewModel.onPasswordChange("a".repeat(RegisterUiState.MIN_PASSWORD_LENGTH))
+        assertTrue(viewModel.uiState.value.canSubmit)
+    }
+
+    @Test
     fun `empty fields can't be submitted`() = runTest {
         viewModel.onRegisterClick()
         advanceUntilIdle()

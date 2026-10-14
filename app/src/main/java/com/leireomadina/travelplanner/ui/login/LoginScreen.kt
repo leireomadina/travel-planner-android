@@ -128,9 +128,14 @@ fun LoginScreen(
         if (uiState.isLoading) {
             LoadingSpinner(contentDescription = stringResource(R.string.login_loading))
         }
-        if (uiState.hasError) {
+        if (uiState.error != null) {
             Text(
-                text = stringResource(R.string.login_error),
+                text = stringResource(
+                    when (uiState.error) {
+                        LoginError.WrongCredentials -> R.string.login_error
+                        LoginError.Network -> R.string.login_network_error
+                    },
+                ),
                 color = MaterialTheme.colorScheme.error,
                 textAlign = TextAlign.Center,
                 // Announced by screen readers when it appears, like the web's role="alert"
@@ -166,7 +171,22 @@ private fun LoginScreenLoadingPreview() {
 private fun LoginScreenErrorPreview() {
     TravelPlannerTheme {
         LoginScreen(
-            LoginUiState(email = "test@test.com", password = "wrong", hasError = true),
+            LoginUiState(
+                email = "test@test.com",
+                password = "wrong",
+                error = LoginError.WrongCredentials,
+            ),
+            {}, {}, {}, {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun LoginScreenNetworkErrorPreview() {
+    TravelPlannerTheme {
+        LoginScreen(
+            LoginUiState(email = "test@test.com", password = "password", error = LoginError.Network),
             {}, {}, {}, {},
         )
     }

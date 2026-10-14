@@ -96,6 +96,17 @@ fun RegisterScreen(
             enabled = !uiState.isLoading,
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
+            // Always shown, so the rule is known before typing, not only after a failed submit
+            supportingText = {
+                Text(
+                    stringResource(
+                        R.string.password_min_length,
+                        RegisterUiState.MIN_PASSWORD_LENGTH,
+                    ),
+                )
+            },
+            // Red once something is typed but it's still too short
+            isError = uiState.password.isNotEmpty() && !uiState.isPasswordLongEnough,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done,

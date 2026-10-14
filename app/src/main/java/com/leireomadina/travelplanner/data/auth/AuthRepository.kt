@@ -3,7 +3,8 @@ package com.leireomadina.travelplanner.data.auth
 import kotlinx.coroutines.flow.Flow
 
 // Single source of truth for the session. Mirrors the web app's src/stores/auth.ts:
-// each function throws if Supabase returns an error.
+// each function throws if Supabase returns an error, or an IOException if Supabase
+// can't be reached (e.g. offline).
 interface AuthRepository {
     val authState: Flow<AuthState>
 
