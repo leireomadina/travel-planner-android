@@ -1,3 +1,30 @@
 <resources>
     <string name="app_name">Travel Planner</string>
+
+    <!-- Shared by the login and register forms -->
+    <string name="email_label">Email</string>
+    <string name="email_placeholder">Type your email</string>
+    <string name="password_label">Password</string>
+    <string name="password_placeholder">Type your password</string>
+
+    <!-- Login -->
+    <string name="login_title">Login</string>
+    <string name="login_submit">Sign in</string>
+    <string name="login_loading">Logging in</string>
+    <string name="login_error">We\'re sorry, but the user or password is incorrect.</string>
+    <string name="login_go_to_register">Create a new account</string>
+
+    <!-- Register -->
+    <string name="register_title">Register</string>
+    <string name="register_submit">Create a new account</string>
+    <string name="register_loading">Registering</string>
+    <string name="register_successful">Check your email to confirm registration.</string>
+    <string name="register_error">We\'re sorry, there has been an error. Check again later.</string>
+
+    <!-- Home -->
+    <string name="home_title">Home</string>
+    <string name="hello">Hola</string>
+    <string name="logout_submit">Log out</string>
+    <string name="logout_loading">Logging out…</string>
+    <string name="logout_error">Something went wrong while logging out. Please try again.</string>
 </resources>

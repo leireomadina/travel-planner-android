@@ -9,6 +9,9 @@ class FakeAuthRepository(
 
     override val authState = MutableStateFlow(initialState)
 
+    // Set to true to make logout() fail, e.g. to test the logout error message
+    var shouldFailLogout = false
+
     override suspend fun login(email: String, password: String) {
         if (password == WRONG_PASSWORD) throw IllegalStateException("Invalid login credentials")
         authState.value = AuthState.LoggedIn
@@ -21,6 +24,7 @@ class FakeAuthRepository(
     }
 
     override suspend fun logout() {
+        if (shouldFailLogout) throw IllegalStateException("Sign-out failed")
         authState.value = AuthState.LoggedOut
     }
 
