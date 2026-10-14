@@ -78,6 +78,28 @@ class LoginViewModelTest {
     }
 
     @Test
+    fun `editing a field hides the previous error`() = runTest {
+        fillIn(password = FakeAuthRepository.WRONG_PASSWORD)
+        viewModel.onLoginClick()
+        advanceUntilIdle()
+
+        viewModel.onPasswordChange("password")
+
+        assertFalse(viewModel.uiState.value.hasError)
+    }
+
+    @Test
+    fun `spaces around the email are removed before logging in`() = runTest {
+        viewModel.onEmailChange(" test@test.com ")
+        viewModel.onPasswordChange("password")
+
+        viewModel.onLoginClick()
+        advanceUntilIdle()
+
+        assertEquals("test@test.com", authRepository.lastEmail)
+    }
+
+    @Test
     fun `empty fields can't be submitted`() = runTest {
         viewModel.onLoginClick()
         advanceUntilIdle()

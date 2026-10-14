@@ -20,9 +20,12 @@ class RegisterViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(RegisterUiState())
     val uiState: StateFlow<RegisterUiState> = _uiState.asStateFlow()
 
-    fun onEmailChange(email: String) = _uiState.update { it.copy(email = email) }
+    // Editing a field hides the previous result, which was about the old input
+    fun onEmailChange(email: String) =
+        _uiState.update { it.copy(email = email, isSuccess = false, hasError = false) }
 
-    fun onPasswordChange(password: String) = _uiState.update { it.copy(password = password) }
+    fun onPasswordChange(password: String) =
+        _uiState.update { it.copy(password = password, isSuccess = false, hasError = false) }
 
     fun onRegisterClick() {
         val state = _uiState.value
@@ -32,7 +35,8 @@ class RegisterViewModel @Inject constructor(
         _uiState.update { it.copy(isLoading = true, isSuccess = false, hasError = false) }
         viewModelScope.launch {
             try {
-                authRepository.register(state.email, state.password)
+                // Keyboards' autocomplete often adds a trailing space, which Supabase rejects
+                authRepository.register(state.email.trim(), state.password)
                 _uiState.update { it.copy(isSuccess = true) }
             } catch (e: CancellationException) {
                 throw e

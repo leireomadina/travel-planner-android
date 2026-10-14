@@ -8,7 +8,9 @@ data class RegisterUiState(
     val isSuccess: Boolean = false,
     val hasError: Boolean = false,
 ) {
-    // Like the web form's `required` fields: both must be filled in to submit
+    // Like the web form's `required` fields: both must be filled in to submit.
+    // After a sign-up works, submitting again would only send another confirmation
+    // email, so it stays off until a field is edited.
     val canSubmit: Boolean
-        get() = email.isNotBlank() && password.isNotBlank() && !isLoading
+        get() = email.isNotBlank() && password.isNotBlank() && !isLoading && !isSuccess
 }

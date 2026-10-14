@@ -20,9 +20,11 @@ class LoginViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-    fun onEmailChange(email: String) = _uiState.update { it.copy(email = email) }
+    // Editing a field hides the previous error, which was about the old input
+    fun onEmailChange(email: String) = _uiState.update { it.copy(email = email, hasError = false) }
 
-    fun onPasswordChange(password: String) = _uiState.update { it.copy(password = password) }
+    fun onPasswordChange(password: String) =
+        _uiState.update { it.copy(password = password, hasError = false) }
 
     fun onLoginClick() {
         val state = _uiState.value
@@ -32,7 +34,8 @@ class LoginViewModel @Inject constructor(
         _uiState.update { it.copy(isLoading = true, hasError = false) }
         viewModelScope.launch {
             try {
-                authRepository.login(state.email, state.password)
+                // Keyboards' autocomplete often adds a trailing space, which Supabase rejects
+                authRepository.login(state.email.trim(), state.password)
                 // No navigation here: the session becomes LoggedIn and the app root shows Home.
             } catch (e: CancellationException) {
                 throw e

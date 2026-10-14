@@ -3,9 +3,12 @@ package com.leireomadina.travelplanner.ui.register
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -55,8 +58,12 @@ fun RegisterScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(
+        // Scrolls, and leaves room for the keyboard, so the button and messages stay
+        // reachable on small screens or with large text
         modifier = modifier
             .fillMaxWidth()
+            .imePadding()
+            .verticalScroll(rememberScrollState())
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,

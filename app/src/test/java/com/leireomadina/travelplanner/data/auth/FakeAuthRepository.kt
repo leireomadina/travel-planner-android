@@ -12,7 +12,12 @@ class FakeAuthRepository(
     // Set to true to make logout() fail, e.g. to test the logout error message
     var shouldFailLogout = false
 
+    // The email the last login() or register() call received
+    var lastEmail: String? = null
+        private set
+
     override suspend fun login(email: String, password: String) {
+        lastEmail = email
         if (password == WRONG_PASSWORD) throw IllegalStateException("Invalid login credentials")
         authState.value = AuthState.LoggedIn
     }
@@ -20,6 +25,7 @@ class FakeAuthRepository(
     // Like Supabase with email confirmation on: the user stays logged out until they
     // confirm their email.
     override suspend fun register(email: String, password: String) {
+        lastEmail = email
         if (password == WRONG_PASSWORD) throw IllegalStateException("Sign-up failed")
     }
 
