@@ -1,5 +1,7 @@
 package com.leireomadina.travelplanner.ui.navigation
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -34,16 +36,25 @@ fun AppNavigation(
         ),
         entryProvider = entryProvider {
             entry<Login> {
-                LoginRoute(onRegisterClick = { backStack.add(Register) })
+                Screen { LoginRoute(onRegisterClick = { backStack.add(Register) }) }
             }
             entry<Register> {
                 // Register is only opened from Login, so going "to Login" is going back.
                 // Adding Login instead would stack [Login, Register, Login].
-                RegisterRoute(onLoginClick = { backStack.removeLastOrNull() })
+                Screen { RegisterRoute(onLoginClick = { backStack.removeLastOrNull() }) }
             }
             entry<Home> {
-                HomeRoute()
+                Screen { HomeRoute() }
             }
         },
     )
+}
+
+// Gives a screen a solid background in the theme's color. Without it screens are see-through,
+// so during the back animation the screen in front shows the one behind through it.
+@Composable
+private fun Screen(content: @Composable () -> Unit) {
+    Surface(modifier = Modifier.fillMaxSize()) {
+        content()
+    }
 }

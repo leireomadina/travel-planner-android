@@ -45,9 +45,14 @@ android {
 
     buildTypes {
         release {
+            // R8: removes unused code and resources and shortens names, like a web
+            // bundler's minifier and tree-shaking. Judge the app's speed on release builds.
             optimization {
-                enable = false
+                enable = true
             }
+            // Signed with the debug key so release builds can be installed and tested
+            // locally. Publishing to Google Play will need a real upload key instead.
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
