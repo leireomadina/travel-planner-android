@@ -8,7 +8,6 @@ import dagger.hilt.components.SingletonComponent
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
-import io.github.jan.supabase.logging.LogLevel
 import javax.inject.Singleton
 
 @Module
@@ -22,9 +21,16 @@ object SupabaseModule {
         supabaseUrl = BuildConfig.SUPABASE_URL,
         supabaseKey = BuildConfig.SUPABASE_KEY,
     ) {
-        // In debug builds, log every request and error to Logcat (tag "Supabase"), since
-        // the screens only show a generic message
-        if (BuildConfig.DEBUG) defaultLogLevel = LogLevel.DEBUG
-        install(Auth)
+        // Logging stays at supabase-kt's default level on purpose: DEBUG would also print
+        // login tokens to Logcat. Failures are logged by DefaultAuthRepository instead.
+        install(Auth) {
+            // The confirmation email's link opens travelplanner://confirm, which Android
+            // routes to MainActivity (see the intent-filter in AndroidManifest.xml).
+            // With these set, signUpWith asks Supabase to redirect there instead of the
+            // Site URL. Must match an entry in Supabase → Authentication → URL
+            // Configuration → Redirect URLs.
+            scheme = "travelplanner"
+            host = "confirm"
+        }
     }
 }
