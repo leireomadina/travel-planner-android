@@ -2,4 +2,10 @@
 <resources>
 
     <style name="Theme.TravelPlanner" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- Shown while the app starts and the session loads; then MainActivity switches to
+         postSplashScreenTheme. Uses the app icon on the default background. -->
+    <style name="Theme.TravelPlanner.Starting" parent="Theme.SplashScreen">
+        <item name="postSplashScreenTheme">@style/Theme.TravelPlanner</item>
+    </style>
 </resources>
