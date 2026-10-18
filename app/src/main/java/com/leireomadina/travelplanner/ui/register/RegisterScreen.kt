@@ -13,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -36,6 +37,7 @@ import com.leireomadina.travelplanner.ui.theme.TravelPlannerTheme
 
 @Composable
 fun RegisterRoute(
+    onLoginClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RegisterViewModel = hiltViewModel(),
 ) {
@@ -45,6 +47,7 @@ fun RegisterRoute(
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
         onRegisterClick = viewModel::onRegisterClick,
+        onLoginClick = onLoginClick,
         modifier = modifier,
     )
 }
@@ -55,6 +58,7 @@ fun RegisterScreen(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onRegisterClick: () -> Unit,
+    onLoginClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -125,6 +129,13 @@ fun RegisterScreen(
         ) {
             Text(stringResource(R.string.register_submit))
         }
+        TextButton(
+            onClick = onLoginClick,
+            enabled = !uiState.isLoading,
+            modifier = Modifier.testTag("register-go-to-login"),
+        ) {
+            Text(stringResource(R.string.register_go_to_login))
+        }
         // Only one of these shows at a time, like the web's v-if / v-else-if chain
         when {
             uiState.isLoading -> LoadingSpinner(
@@ -153,7 +164,7 @@ fun RegisterScreen(
 @Composable
 private fun RegisterScreenEmptyPreview() {
     TravelPlannerTheme {
-        RegisterScreen(RegisterUiState(), {}, {}, {})
+        RegisterScreen(RegisterUiState(), {}, {}, {}, {})
     }
 }
 
@@ -163,7 +174,7 @@ private fun RegisterScreenLoadingPreview() {
     TravelPlannerTheme {
         RegisterScreen(
             RegisterUiState(email = "test@test.com", password = "password", isLoading = true),
-            {}, {}, {},
+            {}, {}, {}, {},
         )
     }
 }
@@ -174,7 +185,7 @@ private fun RegisterScreenSuccessPreview() {
     TravelPlannerTheme {
         RegisterScreen(
             RegisterUiState(email = "test@test.com", password = "password", isSuccess = true),
-            {}, {}, {},
+            {}, {}, {}, {},
         )
     }
 }
@@ -185,7 +196,7 @@ private fun RegisterScreenErrorPreview() {
     TravelPlannerTheme {
         RegisterScreen(
             RegisterUiState(email = "test@test.com", password = "password", hasError = true),
-            {}, {}, {},
+            {}, {}, {}, {},
         )
     }
 }

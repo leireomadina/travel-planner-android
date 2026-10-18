@@ -37,7 +37,9 @@ fun AppNavigation(
                 LoginRoute(onRegisterClick = { backStack.add(Register) })
             }
             entry<Register> {
-                RegisterRoute()
+                // Register is only opened from Login, so going "to Login" is going back.
+                // Adding Login instead would stack [Login, Register, Login].
+                RegisterRoute(onLoginClick = { backStack.removeLastOrNull() })
             }
             entry<Home> {
                 HomeRoute()
