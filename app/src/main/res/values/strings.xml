@@ -21,6 +21,7 @@
     <string name="register_submit">Create a new account</string>
     <string name="register_loading">Registering</string>
     <string name="register_successful">Check your email to confirm registration.</string>
+    <string name="register_go_to_login">Already have an account? Log in</string>
     <string name="register_error">We\'re sorry, there has been an error. Check again later.</string>
 
     <!-- Home -->

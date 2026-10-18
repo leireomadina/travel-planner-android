@@ -8,6 +8,7 @@ import dagger.hilt.components.SingletonComponent
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
+import io.github.jan.supabase.logging.LogLevel
 import javax.inject.Singleton
 
 @Module
@@ -21,6 +22,9 @@ object SupabaseModule {
         supabaseUrl = BuildConfig.SUPABASE_URL,
         supabaseKey = BuildConfig.SUPABASE_KEY,
     ) {
+        // In debug builds, log every request and error to Logcat (tag "Supabase"), since
+        // the screens only show a generic message
+        if (BuildConfig.DEBUG) defaultLogLevel = LogLevel.DEBUG
         install(Auth)
     }
 }
