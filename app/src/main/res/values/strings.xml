@@ -1,33 +1,37 @@
 <resources>
-    <string name="app_name">Travel Planner</string>
+    <!-- Spanish is the default language, like the web app (src/locales/es.json). English is
+         in values-en/strings.xml; Android picks it when the phone is set to English. -->
+
+    <!-- The app's name, the same in every language -->
+    <string name="app_name" translatable="false">Travel Planner</string>
 
     <!-- Shared by the login and register forms -->
     <string name="email_label">Email</string>
-    <string name="email_placeholder">Type your email</string>
-    <string name="password_label">Password</string>
-    <string name="password_placeholder">Type your password</string>
-    <string name="password_min_length">At least %1$d characters</string>
+    <string name="email_placeholder">Escribe tu email</string>
+    <string name="password_label">Contraseña</string>
+    <string name="password_placeholder">Escribe tu contraseña</string>
+    <string name="password_min_length">Al menos %1$d caracteres</string>
 
     <!-- Login -->
-    <string name="login_title">Login</string>
-    <string name="login_submit">Sign in</string>
-    <string name="login_loading">Logging in</string>
-    <string name="login_error">We\'re sorry, but the user or password is incorrect.</string>
-    <string name="login_network_error">We couldn\'t connect. Check your internet connection and try again.</string>
-    <string name="login_go_to_register">Create a new account</string>
+    <string name="login_title">Iniciar sesión</string>
+    <string name="login_submit">Entrar</string>
+    <string name="login_loading">Iniciando sesión</string>
+    <string name="login_error">Lo sentimos, el usuario o la contraseña no son correctos.</string>
+    <string name="login_network_error">No hemos podido conectar. Comprueba tu conexión a internet e inténtalo de nuevo.</string>
+    <string name="login_go_to_register">Crear una cuenta nueva</string>
 
     <!-- Register -->
-    <string name="register_title">Register</string>
-    <string name="register_submit">Create a new account</string>
-    <string name="register_loading">Registering</string>
-    <string name="register_successful">Check your email to confirm registration.</string>
-    <string name="register_go_to_login">Already have an account? Log in</string>
-    <string name="register_error">We\'re sorry, there has been an error. Check again later.</string>
+    <string name="register_title">Registro</string>
+    <string name="register_submit">Crear una cuenta nueva</string>
+    <string name="register_loading">Registrando</string>
+    <string name="register_successful">Revisa tu email para confirmar el registro.</string>
+    <string name="register_go_to_login">¿Ya tienes una cuenta? Inicia sesión</string>
+    <string name="register_error">Lo sentimos, ha habido un error. Inténtalo más tarde.</string>
 
     <!-- Home -->
-    <string name="home_title">Home</string>
+    <string name="home_title">Inicio</string>
     <string name="hello">Hola</string>
-    <string name="logout_submit">Log out</string>
-    <string name="logout_loading">Logging out…</string>
-    <string name="logout_error">Something went wrong while logging out. Please try again.</string>
+    <string name="logout_submit">Cerrar sesión</string>
+    <string name="logout_loading">Cerrando sesión…</string>
+    <string name="logout_error">Algo ha fallado al cerrar sesión. Inténtalo de nuevo.</string>
 </resources>
