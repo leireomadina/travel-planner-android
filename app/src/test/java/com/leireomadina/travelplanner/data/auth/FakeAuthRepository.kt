@@ -1,5 +1,6 @@
 package com.leireomadina.travelplanner.data.auth
 
+import android.content.Intent
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.IOException
 
@@ -38,6 +39,9 @@ class FakeAuthRepository(
         if (shouldFailLogout) throw IllegalStateException("Sign-out failed")
         authState.value = AuthState.LoggedOut
     }
+
+    // Tests don't build Android intents; the real handling is checked by hand on a device
+    override fun handleConfirmationLink(intent: Intent) = Unit
 
     companion object {
         // Long enough for the register form's minimum, so register tests can submit it

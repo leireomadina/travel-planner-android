@@ -1,5 +1,6 @@
 package com.leireomadina.travelplanner.data.auth
 
+import android.content.Intent
 import kotlinx.coroutines.flow.Flow
 
 // Single source of truth for the session. Mirrors the web app's src/stores/auth.ts:
@@ -13,4 +14,8 @@ interface AuthRepository {
     suspend fun register(email: String, password: String)
 
     suspend fun logout()
+
+    // Logs the user in from the confirmation email's link (travelplanner://confirm#...),
+    // if the intent carries one. Other intents are ignored.
+    fun handleConfirmationLink(intent: Intent)
 }
