@@ -1,13 +1,11 @@
 package com.leireomadina.travelplanner.data.auth
 
 import android.content.Intent
-import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.IOException
+import kotlinx.coroutines.flow.MutableStateFlow
 
 // In-memory AuthRepository for tests: no network, and any password except WRONG_PASSWORD works.
-class FakeAuthRepository(
-    initialState: AuthState = AuthState.LoggedOut,
-) : AuthRepository {
+class FakeAuthRepository(initialState: AuthState = AuthState.LoggedOut) : AuthRepository {
 
     override val authState = MutableStateFlow(initialState)
 

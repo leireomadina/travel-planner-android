@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.ktlint)
 }
 
 // Supabase URL and publishable key, from the git-ignored local.properties
@@ -17,12 +18,11 @@ val localProperties = Properties().apply {
     }
 }
 
-fun supabaseConfig(name: String): String =
-    localProperties.getProperty(name)
-        ?: System.getenv(name)
-        ?: throw GradleException(
-            "Add $name to local.properties, with the same value as the web app's NUXT_PUBLIC_$name.",
-        )
+fun supabaseConfig(name: String): String = localProperties.getProperty(name)
+    ?: System.getenv(name)
+    ?: throw GradleException(
+        "Add $name to local.properties, with the same value as the web app's NUXT_PUBLIC_$name.",
+    )
 
 android {
     namespace = "com.leireomadina.travelplanner"

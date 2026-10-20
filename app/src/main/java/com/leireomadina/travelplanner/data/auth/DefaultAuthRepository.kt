@@ -9,14 +9,13 @@ import io.github.jan.supabase.auth.handleDeeplinks
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.status.SessionStatus
 import io.github.jan.supabase.exceptions.RestException
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
-class DefaultAuthRepository @Inject constructor(
-    private val supabase: SupabaseClient,
-) : AuthRepository {
+class DefaultAuthRepository @Inject constructor(private val supabase: SupabaseClient) :
+    AuthRepository {
 
     override val authState: Flow<AuthState> = supabase.auth.sessionStatus.map { status ->
         when (status) {
@@ -58,15 +57,14 @@ class DefaultAuthRepository @Inject constructor(
     // The screens only show a generic message, so in debug builds this logs Supabase's
     // actual reason (e.g. "HTTP 429 over_email_send_rate_limit") to Logcat under the
     // AuthRepository tag. The error is then rethrown for the ViewModel to handle as before.
-    private inline fun <T> logFailure(action: String, block: () -> T): T =
-        try {
-            block()
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            logError(action, e)
-            throw e
-        }
+    private inline fun <T> logFailure(action: String, block: () -> T): T = try {
+        block()
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        logError(action, e)
+        throw e
+    }
 
     private fun logError(action: String, error: Throwable) {
         if (!BuildConfig.DEBUG) return

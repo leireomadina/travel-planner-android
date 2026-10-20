@@ -34,3 +34,42 @@ team. Checked before adopting version 3.8.0:
 | Compatibility | Built with Kotlin 2.4.0 (project uses 2.4.20), Ktor 3.6.0 OkHttp engine, library minSdk 23 |
 | Maintenance | Stable releases roughly monthly (3.6.0 Apr, 3.7.0 Jul, 3.8.0 Aug 2026), last commit 2026-09-26, not archived |
 | Risk | Mostly one maintainer. Contained: only `DefaultAuthRepository` will use it |
+
+## Continuous integration
+
+`.github/workflows/ci.yml` runs on every pull request and every push to `main`:
+
+```
+./gradlew ktlintCheck lint testDebugUnitTest assembleDebug
+```
+
+That's code style (ktlint, configured in `.editorconfig`), Android Lint, all unit and UI tests
+(Robolectric, no emulator) and a debug build. Run the same command locally before pushing;
+`./gradlew ktlintFormat` fixes most style findings automatically.
+
+### Supabase values in CI
+
+The build needs `SUPABASE_URL` and `SUPABASE_KEY`. Locally they come from `local.properties`,
+which isn't in the repo. CI passes **placeholder values** as environment variables instead: no
+test talks to Supabase (they use `FakeAuthRepository`), so a fake address is enough. The app CI
+builds can't log in, though.
+
+To have CI build an app that really connects (e.g. for releases), store the real values as
+GitHub secrets:
+
+1. On GitHub, open the repo → **Settings → Secrets and variables → Actions → New repository
+   secret**.
+2. Add `SUPABASE_URL` with the project URL (`https://<project-ref>.supabase.co`), and
+   `SUPABASE_KEY` with the publishable key. They're in Supabase → **Project Settings → API
+   Keys** / **Data API**, and in `local.properties`.
+3. In `.github/workflows/ci.yml`, replace the placeholders:
+
+   ```yaml
+   env:
+     SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+     SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+   ```
+
+GitHub encrypts secrets, masks them in the logs, and never shows them again (they can only be
+replaced). Pull requests from forks don't receive them.
+

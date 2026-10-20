@@ -174,7 +174,10 @@ private fun RegisterScreenLoadingPreview() {
     TravelPlannerTheme {
         RegisterScreen(
             RegisterUiState(email = "test@test.com", password = "password", isLoading = true),
-            {}, {}, {}, {},
+            {},
+            {},
+            {},
+            {},
         )
     }
 }
@@ -185,7 +188,10 @@ private fun RegisterScreenSuccessPreview() {
     TravelPlannerTheme {
         RegisterScreen(
             RegisterUiState(email = "test@test.com", password = "password", isSuccess = true),
-            {}, {}, {}, {},
+            {},
+            {},
+            {},
+            {},
         )
     }
 }
@@ -196,7 +202,10 @@ private fun RegisterScreenErrorPreview() {
     TravelPlannerTheme {
         RegisterScreen(
             RegisterUiState(email = "test@test.com", password = "password", hasError = true),
-            {}, {}, {}, {},
+            {},
+            {},
+            {},
+            {},
         )
     }
 }

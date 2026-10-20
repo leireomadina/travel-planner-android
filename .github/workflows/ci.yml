@@ -1,0 +1,46 @@
+# Runs on every pull request and every push to main: code style, Android Lint, all tests and
+# a debug build. Like a web project's CI running lint, tests and build on each PR.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A new push to the same PR cancels the run still going for the previous one
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Lint, test and build
+    runs-on: ubuntu-latest
+    env:
+      # The build needs these (normally from the git-ignored local.properties). Placeholders
+      # are enough: the tests use FakeAuthRepository and never reach Supabase. To build an app
+      # that really connects, use GitHub secrets instead (see the README).
+      SUPABASE_URL: https://placeholder.supabase.co
+      SUPABASE_KEY: placeholder
+    steps:
+      - uses: actions/checkout@v7
+
+      # The same Java version as Android Studio's bundled JDK
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+
+      # Sets up Gradle and caches its downloads between runs
+      - uses: gradle/actions/setup-gradle@v6
+
+      - name: Code style, Android Lint, unit and UI tests, debug build
+        run: ./gradlew ktlintCheck lint testDebugUnitTest assembleDebug
+
+      # When something fails, the lint and test reports can be downloaded from the run's page
+      - name: Upload reports
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: reports
+          path: app/build/reports/
