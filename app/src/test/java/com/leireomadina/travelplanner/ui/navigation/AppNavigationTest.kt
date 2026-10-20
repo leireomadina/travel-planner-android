@@ -83,7 +83,9 @@ class AppNavigationTest {
     @Test
     fun `a wrong password stays on login with an error`() {
         composeRule.onNodeWithTag("login-email").performTextInput("test@test.com")
-        composeRule.onNodeWithTag("login-password").performTextInput(FakeAuthRepository.WRONG_PASSWORD)
+        composeRule.onNodeWithTag(
+            "login-password",
+        ).performTextInput(FakeAuthRepository.WRONG_PASSWORD)
 
         composeRule.onNodeWithTag("login-submit").performClick()
 

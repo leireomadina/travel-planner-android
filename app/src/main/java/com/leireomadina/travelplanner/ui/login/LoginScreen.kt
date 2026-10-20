@@ -161,7 +161,10 @@ private fun LoginScreenLoadingPreview() {
     TravelPlannerTheme {
         LoginScreen(
             LoginUiState(email = "test@test.com", password = "password", isLoading = true),
-            {}, {}, {}, {},
+            {},
+            {},
+            {},
+            {},
         )
     }
 }
@@ -176,7 +179,10 @@ private fun LoginScreenErrorPreview() {
                 password = "wrong",
                 error = LoginError.WrongCredentials,
             ),
-            {}, {}, {}, {},
+            {},
+            {},
+            {},
+            {},
         )
     }
 }
@@ -186,8 +192,15 @@ private fun LoginScreenErrorPreview() {
 private fun LoginScreenNetworkErrorPreview() {
     TravelPlannerTheme {
         LoginScreen(
-            LoginUiState(email = "test@test.com", password = "password", error = LoginError.Network),
-            {}, {}, {}, {},
+            LoginUiState(
+                email = "test@test.com",
+                password = "password",
+                error = LoginError.Network,
+            ),
+            {},
+            {},
+            {},
+            {},
         )
     }
 }

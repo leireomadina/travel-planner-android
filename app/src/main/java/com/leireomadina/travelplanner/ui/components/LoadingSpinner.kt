@@ -12,10 +12,7 @@ import androidx.compose.ui.unit.dp
 // Android version of the web app's LoadingSpinner.vue. contentDescription is what
 // screen readers announce, like the web component's ariaLabel.
 @Composable
-fun LoadingSpinner(
-    contentDescription: String,
-    modifier: Modifier = Modifier,
-) {
+fun LoadingSpinner(contentDescription: String, modifier: Modifier = Modifier) {
     CircularProgressIndicator(
         modifier = modifier
             .size(32.dp)

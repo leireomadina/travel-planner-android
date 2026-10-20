@@ -13,9 +13,8 @@ import org.junit.runner.Description
 // tests. This rule swaps it for a test dispatcher that runTest controls, so a test
 // decides when launched work runs (e.g. with advanceUntilIdle()).
 @OptIn(ExperimentalCoroutinesApi::class)
-class MainDispatcherRule(
-    private val testDispatcher: TestDispatcher = StandardTestDispatcher(),
-) : TestWatcher() {
+class MainDispatcherRule(private val testDispatcher: TestDispatcher = StandardTestDispatcher()) :
+    TestWatcher() {
 
     override fun starting(description: Description) {
         Dispatchers.setMain(testDispatcher)

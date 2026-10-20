@@ -24,10 +24,7 @@ import com.leireomadina.travelplanner.ui.components.LoadingSpinner
 import com.leireomadina.travelplanner.ui.theme.TravelPlannerTheme
 
 @Composable
-fun HomeRoute(
-    modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = hiltViewModel(),
-) {
+fun HomeRoute(modifier: Modifier = Modifier, viewModel: HomeViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     HomeScreen(
         uiState = uiState,
@@ -37,11 +34,7 @@ fun HomeRoute(
 }
 
 @Composable
-fun HomeScreen(
-    uiState: HomeUiState,
-    onLogoutClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
+fun HomeScreen(uiState: HomeUiState, onLogoutClick: () -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxWidth()

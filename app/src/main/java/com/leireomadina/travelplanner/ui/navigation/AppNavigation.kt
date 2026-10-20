@@ -17,10 +17,7 @@ import com.leireomadina.travelplanner.ui.register.RegisterRoute
 // The screens reachable from startKey. The back stack is a plain list: adding a key
 // opens that screen, and system back removes the last one.
 @Composable
-fun AppNavigation(
-    startKey: NavKey,
-    modifier: Modifier = Modifier,
-) {
+fun AppNavigation(startKey: NavKey, modifier: Modifier = Modifier) {
     val backStack = rememberNavBackStack(startKey)
 
     NavDisplay(

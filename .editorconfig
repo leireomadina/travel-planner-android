@@ -1,0 +1,12 @@
+# Code style for ktlint (./gradlew ktlintCheck, ktlintFormat) and Android Studio
+root = true
+
+[*.{kt,kts}]
+# Android's official Kotlin style, the same as Android Studio's default formatter
+ktlint_code_style = android_studio
+# Composable functions are named like components (LoginScreen), not like functions (loginScreen)
+ktlint_function_naming_ignore_when_annotated_with = Composable
+# Trailing commas, as used throughout the code (and Google's Compose samples): adding a
+# parameter or argument then changes one line instead of two
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_allow_trailing_comma_on_call_site = true

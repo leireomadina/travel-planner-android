@@ -12,10 +12,7 @@ import com.leireomadina.travelplanner.data.auth.AuthState
 // stack, so logging in or out replaces the whole stack: back after logout can't reach
 // Home. Screens never navigate on login or logout themselves.
 @Composable
-fun AppRoot(
-    authState: AuthState,
-    modifier: Modifier = Modifier,
-) {
+fun AppRoot(authState: AuthState, modifier: Modifier = Modifier) {
     Scaffold(modifier = modifier.fillMaxSize()) { innerPadding ->
         val contentModifier = Modifier.padding(innerPadding)
         when (authState) {
