@@ -97,6 +97,8 @@ developer's permissions.
 - **Redirect URL:** `travelplanner://confirm` must be in Supabase's Redirect URLs, or the
   confirmation email links to the web's Site URL instead.
 - Confirmation links are single-use: opening one anywhere (e.g. on the computer) uses it up.
+  With PKCE (`flowType = FlowType.PKCE` in `SupabaseModule`) they only log in on the install that
+  signed up: the code verifier is saved on the device at sign-up.
 - **supabase-kt `LogLevel.DEBUG` prints login tokens** to Logcat; it's kept at the default on
   purpose.
 - **Robolectric:** `src/test/resources/robolectric.properties` pins `sdk=36` (Espresso doesn't

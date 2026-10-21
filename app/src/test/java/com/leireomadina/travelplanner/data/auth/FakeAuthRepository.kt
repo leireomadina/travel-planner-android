@@ -38,8 +38,13 @@ class FakeAuthRepository(initialState: AuthState = AuthState.LoggedOut) : AuthRe
         authState.value = AuthState.LoggedOut
     }
 
-    // Tests don't build Android intents; the real handling is checked by hand on a device
-    override fun handleConfirmationLink(intent: Intent) = Unit
+    // The intents passed to handleConfirmationLink, so tests can check the app hands
+    // confirmation links over. Exchanging the code with Supabase is checked by hand on a device.
+    val confirmationLinks = mutableListOf<Intent>()
+
+    override fun handleConfirmationLink(intent: Intent) {
+        confirmationLinks += intent
+    }
 
     companion object {
         // Long enough for the register form's minimum, so register tests can submit it
