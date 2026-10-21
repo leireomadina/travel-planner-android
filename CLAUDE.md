@@ -60,6 +60,35 @@ R8 ≈ a bundler's minifier, Robolectric ≈ jsdom).
 - `main` is protected: the CI check **Lint, test and build** must pass before merging.
 - Commit messages: imperative subject, a body that explains what changed and why.
 
+## Agent skills
+
+Installed in `.claude/skills/` (loaded automatically when relevant):
+
+- `navigation-3`, `edge-to-edge`, `testing-setup`: Google's official Android skills
+  ([android/skills](https://github.com/android/skills)). Update with
+  `android skills add --agent=claude-code --project=. <name>` (Android CLI: `brew install
+  android-cli` from the `android/tap` tap).
+- `kotlin-concurrency-and-flow`, `kotlin-control-flow`, `compose-state-and-effects`: from
+  [chrisbanes/skills](https://github.com/chrisbanes/skills) (Apache-2.0), copied at commit
+  `0e99d1c`. To update, copy the skill folders again from that repo.
+- These skills link to sibling skills that aren't installed (`gradle-run`, `compose-performance`,
+  `compose-ui-testing-patterns`, …); ignore those links. In particular, run Gradle directly with
+  `./gradlew` as in **Commands** above, not through a `gradle-run` wrapper.
+
+**Add these when the trigger happens** (from [chrisbanes/skills](https://github.com/chrisbanes/skills),
+copy the skill's folder into `.claude/skills/`). When a task matches a trigger and the skill
+isn't installed yet, suggest adding it before starting:
+
+| Skill | Add when |
+|---|---|
+| `kotlin-api-design` | The app gets its own domain data (trips, itineraries, places…): new models, repositories, IDs |
+| `compose-ui-testing-patterns` | Screenshot tests are added, or screens with images, keyboard/focus or TV/desktop input |
+| `compose-performance` | Screens get long lists or animations, or anything feels slow |
+| `compose-component-design` | Reusable UI components are built beyond `LoadingSpinner` |
+
+Read a skill's files before adding it: skills are instructions an agent follows with the
+developer's permissions.
+
 ## Gotchas (each cost a debugging round)
 
 - **Supabase email limit:** the built-in email service allows 2 auth emails/hour per project. A
