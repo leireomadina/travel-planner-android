@@ -1,5 +1,6 @@
 package com.leireomadina.travelplanner.ui.login
 
+import androidx.lifecycle.SavedStateHandle
 import com.leireomadina.travelplanner.data.auth.AuthState
 import com.leireomadina.travelplanner.data.auth.FakeAuthRepository
 import com.leireomadina.travelplanner.testing.MainDispatcherRule
@@ -21,7 +22,8 @@ class LoginViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val authRepository = FakeAuthRepository()
-    private val viewModel = LoginViewModel(authRepository)
+    private val savedState = SavedStateHandle()
+    private val viewModel = LoginViewModel(authRepository, savedState)
 
     @Test
     fun `typing updates the email and password`() {
@@ -110,6 +112,31 @@ class LoginViewModelTest {
         advanceUntilIdle()
 
         assertEquals("test@test.com", authRepository.lastEmail)
+    }
+
+    @Test
+    fun `the typed email comes back after Android kills and restores the app`() {
+        viewModel.onEmailChange("test@test.com")
+
+        // A new ViewModel with the saved state, as Android builds after restoring the app
+        val restored =
+            LoginViewModel(
+                authRepository,
+                SavedStateHandle(
+                    savedState.keys().associateWith {
+                        savedState.get<Any>(it)
+                    },
+                ),
+            )
+
+        assertEquals("test@test.com", restored.uiState.value.email)
+    }
+
+    @Test
+    fun `the password is never saved`() {
+        viewModel.onPasswordChange("password")
+
+        assertFalse(savedState.keys().any { savedState.get<Any>(it) == "password" })
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.leireomadina.travelplanner.ui.register
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.leireomadina.travelplanner.data.auth.AuthRepository
@@ -13,15 +14,24 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor(private val authRepository: AuthRepository) :
-    ViewModel() {
+class RegisterViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
+    // Survives Android killing the app in the background, unlike the ViewModel itself
+    private val savedStateHandle: SavedStateHandle,
+) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(RegisterUiState())
+    // The typed email comes back after the app is killed and restored. The password is never
+    // saved: saved state is written to disk.
+    private val _uiState = MutableStateFlow(
+        RegisterUiState(email = savedStateHandle[EMAIL_KEY] ?: ""),
+    )
     val uiState: StateFlow<RegisterUiState> = _uiState.asStateFlow()
 
     // Editing a field hides the previous result, which was about the old input
-    fun onEmailChange(email: String) =
+    fun onEmailChange(email: String) {
+        savedStateHandle[EMAIL_KEY] = email
         _uiState.update { it.copy(email = email, isSuccess = false, hasError = false) }
+    }
 
     fun onPasswordChange(password: String) =
         _uiState.update { it.copy(password = password, isSuccess = false, hasError = false) }
@@ -45,5 +55,9 @@ class RegisterViewModel @Inject constructor(private val authRepository: AuthRepo
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
+    }
+
+    private companion object {
+        const val EMAIL_KEY = "email"
     }
 }

@@ -1,19 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-   Sample data extraction rules file; uncomment and customize as necessary.
-   See https://developer.android.com/about/versions/12/backup-restore#xml-changes
-   for details.
--->
+<?xml version="1.0" encoding="utf-8"?>
+<!-- What Android 12+ copies to the user's Google account backup and to a new phone during
+     device transfer. Everything except the login session: supabase-kt saves it in the default
+     shared preferences file, and a session shouldn't move to another device (restored there, it
+     would log in without the password). After a restore or transfer, the user logs in again.
+     Android 8–11 read backup_rules.xml instead. -->
 <data-extraction-rules>
     <cloud-backup>
-        <!-- TODO: Use <include> and <exclude> to control what is backed up.
-        <include .../>
-        <exclude .../>
-        -->
+        <exclude domain="sharedpref" path="com.leireomadina.travelplanner_preferences.xml" />
     </cloud-backup>
-    <!--
     <device-transfer>
-        <include .../>
-        <exclude .../>
+        <exclude domain="sharedpref" path="com.leireomadina.travelplanner_preferences.xml" />
     </device-transfer>
-    -->
 </data-extraction-rules>
