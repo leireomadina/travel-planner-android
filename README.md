@@ -42,7 +42,10 @@ The app relies on these, under Supabase → **Authentication**:
   dashboard.
 
 To test the confirmation link, open the email **on the emulator** (Chrome → gmail.com):
-`travelplanner://` links only work on a device with the app installed.
+`travelplanner://` links only work on a device with the app installed. The app uses Supabase's
+PKCE flow, so the link carries a one-time code that only the install that signed up can exchange
+for a session. Opened anywhere else, the email still gets confirmed, and the user logs in
+normally.
 
 ## Commands
 

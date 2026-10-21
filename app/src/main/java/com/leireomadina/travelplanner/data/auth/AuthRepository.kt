@@ -15,7 +15,7 @@ interface AuthRepository {
 
     suspend fun logout()
 
-    // Logs the user in from the confirmation email's link (travelplanner://confirm#...),
+    // Logs the user in from the confirmation email's link (travelplanner://confirm?code=…),
     // if the intent carries one. Other intents are ignored.
     fun handleConfirmationLink(intent: Intent)
 }

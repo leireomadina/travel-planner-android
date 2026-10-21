@@ -48,8 +48,10 @@ class DefaultAuthRepository @Inject constructor(private val supabase: SupabaseCl
         supabase.auth.signOut()
     }
 
-    // The link carries the new session in its #fragment. Importing it sets the session
-    // status to Authenticated, so authState becomes LoggedIn and the app shows Home.
+    // The link carries a one-time code (?code=…, PKCE). supabase-kt exchanges it for a session
+    // using the code verifier saved at sign-up; that sets the session status to Authenticated,
+    // so authState becomes LoggedIn and the app shows Home. A link opened on another device, or
+    // an expired one, fails here and is logged.
     override fun handleConfirmationLink(intent: Intent) {
         supabase.handleDeeplinks(intent, onError = { logError("Confirmation link", it) })
     }
