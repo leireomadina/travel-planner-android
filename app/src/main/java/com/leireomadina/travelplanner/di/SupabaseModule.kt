@@ -7,6 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
+import io.github.jan.supabase.auth.FlowType
 import io.github.jan.supabase.createSupabaseClient
 import javax.inject.Singleton
 
@@ -31,6 +32,11 @@ object SupabaseModule {
             // Configuration → Redirect URLs.
             scheme = "travelplanner"
             host = "confirm"
+            // PKCE: the link carries a one-time code instead of the session itself. Only this
+            // install can exchange it, with a secret (the code verifier) saved on the device at
+            // sign-up. So another app can't log the user in with a forged link, and one that
+            // intercepts the link gets nothing usable.
+            flowType = FlowType.PKCE
         }
     }
 }
