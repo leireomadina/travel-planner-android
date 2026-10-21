@@ -1,5 +1,6 @@
 package com.leireomadina.travelplanner.ui.register
 
+import androidx.lifecycle.SavedStateHandle
 import com.leireomadina.travelplanner.data.auth.AuthState
 import com.leireomadina.travelplanner.data.auth.FakeAuthRepository
 import com.leireomadina.travelplanner.testing.MainDispatcherRule
@@ -20,7 +21,8 @@ class RegisterViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val authRepository = FakeAuthRepository()
-    private val viewModel = RegisterViewModel(authRepository)
+    private val savedState = SavedStateHandle()
+    private val viewModel = RegisterViewModel(authRepository, savedState)
 
     @Test
     fun `register shows the loading state until it finishes`() = runTest {
@@ -107,6 +109,31 @@ class RegisterViewModelTest {
 
         viewModel.onPasswordChange("a".repeat(RegisterUiState.MIN_PASSWORD_LENGTH))
         assertTrue(viewModel.uiState.value.canSubmit)
+    }
+
+    @Test
+    fun `the typed email comes back after Android kills and restores the app`() {
+        viewModel.onEmailChange("test@test.com")
+
+        // A new ViewModel with the saved state, as Android builds after restoring the app
+        val restored =
+            RegisterViewModel(
+                authRepository,
+                SavedStateHandle(
+                    savedState.keys().associateWith {
+                        savedState.get<Any>(it)
+                    },
+                ),
+            )
+
+        assertEquals("test@test.com", restored.uiState.value.email)
+    }
+
+    @Test
+    fun `the password is never saved`() {
+        viewModel.onPasswordChange("password")
+
+        assertFalse(savedState.keys().any { savedState.get<Any>(it) == "password" })
     }
 
     @Test
