@@ -1,7 +1,107 @@
 # Travel Planner for Android
 
 Native Android app (Kotlin + Jetpack Compose) for travel-planner. It shares the Supabase backend
-with the Nuxt web app, not the code. Setup and run instructions will be added in build step 12.
+with the Nuxt web app (`travel-planner`), not the code. So far it covers the account flows: register
+with email confirmation, log in and log out. The UI is in Spanish by default, and in English on
+phones set to English.
+
+## Setup
+
+1. Install [Android Studio](https://developer.android.com/studio) (it bundles the JDK, 21) and
+   create an emulator in **Device Manager** (any recent Pixel image).
+2. Clone the repo and open the folder in Android Studio. Let it finish the Gradle sync.
+3. Add the Supabase values to `local.properties` in the project root (Android Studio creates the
+   file; it's git-ignored, like the web app's `.env`):
+
+   ```properties
+   SUPABASE_URL=https://<project-ref>.supabase.co
+   SUPABASE_KEY=<publishable key>
+   ```
+
+   They're the same values as the web app's `NUXT_PUBLIC_SUPABASE_URL` and
+   `NUXT_PUBLIC_SUPABASE_KEY`, also in Supabase → **Project Settings → Data API / API Keys**.
+   Copy the URL from there: a one-letter typo gives "Unable to resolve host" on every request.
+4. Press **▶ Run**. The app opens on Login when logged out.
+
+After pulling changes to `gradle/libs.versions.toml` or a `build.gradle.kts`, sync Gradle
+(**File → Sync Project with Gradle Files**) before running, or new imports show as unresolved.
+
+### Supabase project settings
+
+The app relies on these, under Supabase → **Authentication**:
+
+- **URL Configuration → Redirect URLs** must include `travelplanner://confirm`. The app asks
+  Supabase to send the confirmation email's link there, so it opens the app and logs the user
+  in. If it's missing, Supabase silently falls back to the **Site URL** (the web app's), and the
+  link opens a web page instead. The web app's own URLs stay in the same list.
+- **Email limit.** Supabase's built-in email service sends only 2 auth emails per hour for the
+  whole project; the third sign-up in the hour fails with HTTP 429 and creates no user. For
+  testing, use Gmail aliases (`you+test1@gmail.com`): each is a new user, all land in one inbox.
+  A custom SMTP provider (e.g. Brevo, Resend) lifts the limit.
+- Free-plan projects **pause** after about a week without activity; restore them from the
+  dashboard.
+
+To test the confirmation link, open the email **on the emulator** (Chrome → gmail.com):
+`travelplanner://` links only work on a device with the app installed.
+
+## Commands
+
+| Command | What it does |
+|---|---|
+| `./gradlew testDebugUnitTest` | All tests: ViewModel, screen and navigation tests (Robolectric, no emulator) |
+| `./gradlew ktlintCheck` / `ktlintFormat` | Check / fix code style (`.editorconfig`) |
+| `./gradlew lint` | Android Lint |
+| `./gradlew assembleDebug` | Debug APK |
+| `./gradlew assembleRelease` | Release APK, optimized with R8. Signed with the debug key for local testing; Google Play will need a real upload key |
+| `./gradlew installDebug` | Build and install the debug app on the running emulator |
+
+CI runs `./gradlew ktlintCheck lint testDebugUnitTest assembleDebug` on every pull request; a
+pull request can only be merged into `main` when it passes.
+
+Judge the app's speed on release builds: debug builds are much slower.
+
+## How the app is organized
+
+```
+app/src/main/java/com/leireomadina/travelplanner/
+├── MainActivity.kt        Entry point: splash screen, confirmation deep link, AppRoot
+├── MainViewModel.kt       The session state (authState) for the whole app
+├── TravelPlannerApp.kt    The Application class, which starts Hilt
+├── data/auth/             AuthRepository (interface) and DefaultAuthRepository (supabase-kt)
+├── di/                    Hilt modules: the Supabase client, AuthRepository binding
+└── ui/
+    ├── navigation/        NavKeys (one per screen), AppNavigation (back stack), AppRoot
+    ├── login/  register/  home/   Each: Screen (Compose UI), UiState, ViewModel
+    ├── components/        Shared UI (LoadingSpinner)
+    └── theme/             Material 3 theme, with dynamic color
+```
+
+- **Screens get their data from a ViewModel**, which exposes a `UiState` and talks to
+  `AuthRepository`. Only `DefaultAuthRepository` uses supabase-kt.
+- **The session decides the screens.** `AppRoot` shows a navigation starting at Login when logged
+  out, and a separate one starting at Home when logged in (like `redirectOptions` in the web's
+  `nuxt.config.ts`). Logging in or out replaces the whole back stack, so back after logout can't
+  reach Home. Screens never navigate on login or logout themselves.
+- **Strings** live in `res/values/strings.xml` (Spanish, the default) and
+  `res/values-en/strings.xml` (English), with the same keys as the web's `src/locales/*.json`
+  where they overlap. Every new string goes in both.
+- **testTags** match the web app's `data-cy` names (`login-submit`, `register-error`, …).
+
+### Debugging
+
+The screens only show generic error messages. In debug builds, `DefaultAuthRepository` logs the
+real reason to Logcat under the **`AuthRepository`** tag, e.g.
+`Sign-up failed: HTTP 429 over_email_send_rate_limit: …` (never the email or password). Filter
+Logcat in Android Studio by that tag.
+
+### Tests
+
+- `src/test/` holds every test; they all run on the computer. ViewModel tests use
+  `FakeAuthRepository` (in-memory; any password except `WRONG_PASSWORD` works).
+- Screen tests (`*ScreenTest`) draw one screen with a given state. `AppNavigationTest` runs the
+  whole app with Hilt swapping Supabase for `FakeAuthRepository`.
+- `src/test/resources/robolectric.properties` pins the simulated Android to API 36, because
+  Espresso doesn't support 37 (the targetSdk) yet. Bump it when it does.
 
 ## Dependency decisions
 
